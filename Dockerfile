@@ -1,12 +1,8 @@
-FROM php:7.2-fpm
+FROM php:7.3-fpm
 
-MAINTAINER Jaroslav Hranicka <hranicka@outlook.com>
+MAINTAINER Koen Hendriks <info@koenhendriks.com>
 
 ENV DEBIAN_FRONTEND noninteractive
-
-COPY bin/* /usr/local/bin/
-RUN chmod -R 700 /usr/local/bin/
-
 
 # Locales
 RUN apt-get update \
@@ -29,8 +25,8 @@ RUN apt-get update \
 	&& apt-get install -y \
 		openssl \
 		git \
-		gnupg2
-
+		gnupg2 \
+		libzip-dev
 
 # PHP
 # intl
@@ -96,38 +92,10 @@ RUN apt-get update \
 	&& docker-php-ext-install -j$(nproc) \
 		ftp
 
-# ssh2
-RUN apt-get update \
-	&& apt-get install -y \
-	libssh2-1-dev
-
-# memcached
-RUN apt-get update \
-	&& apt-get install -y \
-	libmemcached-dev \
-	libmemcached11
-
-
-# others
-RUN docker-php-ext-install -j$(nproc) \
-	soap \
-	sockets \
-	calendar \
-	sysvmsg \
-	sysvsem \
-	sysvshm
-
-# PECL
-RUN docker-php-pecl-install \
-	ssh2-1.1.2 \
-	redis-4.0.2 \
-	apcu-5.1.11 \
-	memcached-3.0.4
-
 # Install XDebug, but not enable by default. Enable using:
 # * php -d$XDEBUG_EXT vendor/bin/phpunit
 # * php_xdebug vendor/bin/phpunit
-RUN pecl install xdebug-2.6.0
+RUN pecl install xdebug-2.7.2
 ENV XDEBUG_EXT zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20170718/xdebug.so
 RUN alias php_xdebug="php -d$XDEBUG_EXT vendor/bin/phpunit"
 
@@ -164,38 +132,6 @@ RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - \
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
     && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
     && apt-get update && apt-get install -y yarn
-
-# Install Grunt globally
-RUN npm install -g grunt-cli
-
-# Install Gulp globally
-RUN npm install -g gulp-cli
-
-# Install Bower globally
-RUN npm install -g bower
-
-
-# MariaDB
-RUN apt-get update \
-	&& apt-get install -y software-properties-common dirmngr \
-	&& apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8   \
-	&& add-apt-repository 'deb [arch=amd64,i386,ppc64el] http://mirror.vpsfree.cz/mariadb/repo/10.2/debian stretch main'
-
-RUN apt-get update \
-	&& apt-get install -y mariadb-server
-
-VOLUME /var/lib/mysql
-
-ADD my.cnf /etc/mysql/conf.d/my.cnf
-
-EXPOSE 3306
-
-
-# Redis
-RUN apt-get update \
-	&& apt-get install -y redis-server
-
-EXPOSE 6379
 
 
 # Clean
