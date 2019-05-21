@@ -1,4 +1,4 @@
-FROM php:7.3-fpm
+FROM php:7.0-fpm
 
 MAINTAINER Koen Hendriks <info@koenhendriks.com>
 
