@@ -1,4 +1,4 @@
-FROM php:7.3-fpm
+FROM php:7.2-fpm
 
 MAINTAINER Koen Hendriks <info@koenhendriks.com>
 
@@ -36,14 +36,17 @@ RUN apt-get update \
 	&& docker-php-ext-install -j$(nproc) intl
 
 # xml
-RUN apt-get update \
+RUN rm /etc/apt/preferences.d/no-debian-php && \
+    apt-get update \
 	&& apt-get install -y \
 	libxml2-dev \
+	php-soap \
 	libxslt-dev \
 	&& docker-php-ext-install -j$(nproc) \
 		dom \
 		xmlrpc \
-		xsl
+		xsl \
+		soap
 
 # images
 RUN apt-get update \
