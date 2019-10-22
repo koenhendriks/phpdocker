@@ -1,19 +1,35 @@
-# phpdocker/phpdocker
+# koenhendriks/phpdocker
 
 ## Usage
 
-* Docker image is available at [Docker Hub](https://hub.docker.com/r/phpdocker/phpdocker/).
+* Docker image is available at [Docker Hub](https://hub.docker.com/r/koenhendriks/phpdocker/).
 * The primary goal of this Docker image is custom image for CI, but you can use it like you want.
 
 ## Example
 
-* [Shippable CI](https://bitbucket.org/hranicka/composer-sandbox/src/master/shippable.yml?at=master&fileviewer=file-view-default) custom container
+### Gitlab CI Example
+
+__Multiversion PHP Unit Test__ 
+```yml
+phpunit_72:
+  image: koenhendriks/phpdocker:7.2
+  stage: test
+  script:
+    - php ./vendor/bin/phpunit --colors=never -c phpunit-runner.xml
+
+phpunit_73:
+  image: koenhendriks/phpdocker:7.3
+  stage: test
+  script:
+    - php ./vendor/bin/phpunit --colors=never -c phpunit-runner.xml
+
+```
 
 ## Tags
 
 * Tags depend on version of PHP included.
 * They are given by git branches.
-* You can see them at [Docker Hub](https://hub.docker.com/r/phpdocker/phpdocker/tags/).
+* You can see them at [Docker Hub](https://hub.docker.com/r/koenhendriks/phpdocker/tags/).
 
 ---
 
@@ -37,8 +53,10 @@
 * PHP is started automatically.
 * You can type PHP commands, eg. `php -r "echo 1;"`.
 * Each Docker image contains ONLY ONE VERSION OF PHP, so:
-	* If you need PHP 5.6, use `phpdocker/phpdocker:5.6`.
-	* If you need PHP 7.2, use `phpdocker/phpdocker:7.2`.
+	* If you need PHP 7.0, use `koenhendriks/phpdocker:7.0`.
+	* If you need PHP 7.1, use `koenhendriks/phpdocker:7.1`.
+	* If you need PHP 7.2, use `koenhendriks/phpdocker:7.2`.
+	* If you need PHP 7.3, use `koenhendriks/phpdocker:7.3`.
 
 ### Composer
 
@@ -53,4 +71,4 @@
 ### PHPUnit
 
 * PHPUnit is installed globally.
-* You can run it, eg. `phpunit --log-junit shippable/testresults/junit.xml --coverage-xml shippable/codecoverage -c tests/configuration.xml tests`.
+* You can run it, eg. `phpunit  --coverage-text --colors=never --coverage-clover ./phpunit.coverage.xml --log-junit ./phpunit.report.xml`.
