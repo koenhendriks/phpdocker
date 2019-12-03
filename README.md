@@ -23,6 +23,21 @@ phpunit_73:
   script:
     - php ./vendor/bin/phpunit --colors=never -c phpunit-runner.xml
 
+# With xdebug coverage
+phpunit74:
+  image: koenhendriks/phpdocker:7.4
+  stage: test
+  script:
+    - php -d$XDEBUG_EXT ./vendor/bin/phpunit  --coverage-text --colors=never --coverage-clover ./coverage/phpunit.coverage.xml --log-junit ./coverage/phpunit.report.xml
+  artifacts:
+    expire_in: 1 week
+    reports:
+      junit: ./coverage/phpunit.report.xml
+    paths:
+      - ./coverage/
+  only:
+    - master
+    - tags
 ```
 
 ## Tags
