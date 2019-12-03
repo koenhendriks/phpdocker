@@ -1,4 +1,4 @@
-FROM php:7.2-fpm
+FROM php:7.4-fpm
 
 MAINTAINER Koen Hendriks <info@koenhendriks.com>
 
@@ -42,6 +42,7 @@ RUN rm /etc/apt/preferences.d/no-debian-php && \
 	libxml2-dev \
 	php-soap \
 	libxslt-dev \
+	libonig-dev \
 	&& docker-php-ext-install -j$(nproc) \
 		dom \
 		xmlrpc \
@@ -98,8 +99,8 @@ RUN apt-get update \
 # Install XDebug, but not enable by default. Enable using:
 # * php -d$XDEBUG_EXT vendor/bin/phpunit
 # * php_xdebug vendor/bin/phpunit
-RUN pecl install xdebug-2.7.2
-ENV XDEBUG_EXT zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20180731/xdebug.so
+RUN pecl install xdebug-2.8.1
+ENV XDEBUG_EXT zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20190902/xdebug.so
 RUN alias php_xdebug="php -d$XDEBUG_EXT vendor/bin/phpunit"
 
 # Install composer and put binary into $PATH
